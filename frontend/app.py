@@ -4,8 +4,8 @@ import requests as rq
 import streamlit as st
 
 
-URL = f"http://backend:{os.getenv('BACKEND_PORT')}/"
-# URL = 'http://0.0.0.0:8228'
+URL = f"http://backend:{os.getenv('BACKEND_PORT')}"
+# URL = 'http://158.160.17.229:8520'
 
 st.set_page_config(page_title="ATOMIC HACK 2024", layout="wide")
 
