@@ -77,7 +77,7 @@ jobs:
             cd ${{ github.event.repository.name }}/production
             git pull https://${{ secrets.PUNKER_GITHUB_USERNAME }}:${{ secrets.PUNKER_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git main
             
-            rm .env
+            rm -f .env
             echo DOCKERHUB_LOGIN=${{ env.DOCKERHUB_LOGIN }} >> .env
             
             echo DOCKER_BACKEND_PREIMAGE_NAME=${{ env.DOCKER_BACKEND_PREIMAGE_NAME }} >> .env
