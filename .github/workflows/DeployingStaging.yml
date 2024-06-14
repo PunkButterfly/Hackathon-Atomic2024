@@ -1,6 +1,7 @@
 name: Deploying to Staging
 on:
-  push:
+  pull_request:
+    types: [ opened, edited ]
     branches:
       - staging
 env:
