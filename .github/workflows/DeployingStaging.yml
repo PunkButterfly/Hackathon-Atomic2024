@@ -5,14 +5,14 @@ on:
       - staging
 env:
   BACKEND_PREIMAGE_PATH: preimages/backend
-  DOCKER_BACKEND_PREIMAGE_NAME: servicecicd-backend-preimage-staging
-  BACKEND_CONTAINER_NAME: servicecicd-backend-staging
-  BACKEND_PORT: 8502
+  DOCKER_BACKEND_PREIMAGE_NAME: atomichack-backend-preimage-staging
+  BACKEND_CONTAINER_NAME: atomichack-backend-staging
+  BACKEND_PORT: 8520
 
   FRONTEND_PREIMAGE_PATH: preimages/frontend
-  DOCKER_FRONTEND_PREIMAGE_NAME: servicecicd-frontend-preimage-staging
-  FRONTEND_CONTAINER_NAME: servicecicd-frontend-staging
-  FRONTEND_PORT: 8501
+  DOCKER_FRONTEND_PREIMAGE_NAME: atomichack-frontend-preimage-staging
+  FRONTEND_CONTAINER_NAME: atomichack-frontend-staging
+  FRONTEND_PORT: 8521
 
   DOCKERHUB_LOGIN: ${{ secrets.DOCKERHUB_LOGIN }}
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}

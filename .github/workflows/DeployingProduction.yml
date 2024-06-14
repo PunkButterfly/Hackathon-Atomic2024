@@ -6,14 +6,14 @@ on:
       - main
 env:
   BACKEND_PREIMAGE_PATH: preimages/backend
-  DOCKER_BACKEND_PREIMAGE_NAME: servicecicd-backend-preimage-production
-  BACKEND_CONTAINER_NAME: servicecicd-backend-production
-  BACKEND_PORT: 8506
+  DOCKER_BACKEND_PREIMAGE_NAME: atomichack-backend-preimage-production
+  BACKEND_CONTAINER_NAME: atomichack-backend-production
+  BACKEND_PORT: 8510
 
   FRONTEND_PREIMAGE_PATH: preimages/frontend
-  DOCKER_FRONTEND_PREIMAGE_NAME: servicecicd-frontend-preimage-production
-  FRONTEND_CONTAINER_NAME: servicecicd-frontend-production
-  FRONTEND_PORT: 8505
+  DOCKER_FRONTEND_PREIMAGE_NAME: atomichack-frontend-preimage-production
+  FRONTEND_CONTAINER_NAME: atomichack-frontend-production
+  FRONTEND_PORT: 8511
 
   DOCKERHUB_LOGIN: ${{ secrets.DOCKERHUB_LOGIN }}
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
