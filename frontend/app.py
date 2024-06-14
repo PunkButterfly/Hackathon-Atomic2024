@@ -5,7 +5,7 @@ import streamlit as st
 
 
 URL = f"http://backend:{os.getenv('BACKEND_PORT')}"
-# URL = 'http://158.160.17.229:8520'
+# URL = 'http://0.0.0.0:8228'
 
 st.set_page_config(page_title="ATOMIC HACK 2024", layout="wide")
 
@@ -35,9 +35,9 @@ with proceed_img:
     if uploaded_file:
         st.image(image_bin, caption="Выделенные данные на снимке")
 
-with response_body:
-    if uploaded_file:
-        st.write(f"Количество обнаруженных дефектов: {228}")
+# with response_body:
+#     if uploaded_file:
+#         st.write(f"Количество обнаруженных дефектов: {228}")
 
 # curr_time = datetime.now()
 # try:

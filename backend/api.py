@@ -1,3 +1,4 @@
+from models.Detecor import Detector
 from datetime import datetime
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import FileResponse, Response
@@ -7,10 +8,14 @@ import io
 import os
 import uvicorn
 
-WORKDIR = '' # for docker
+WORKDIR = ''
+
 TMP_DIR = f'{WORKDIR}tmp_files/'
+WEIGHTS_DIR = f'{WORKDIR}models/weights/'
 
 app = FastAPI()
+
+detector = Detector(path_to_weights=WEIGHTS_DIR, path_to_tmp=TMP_DIR, weights_name='detector_weights_v1.pt')
 
 async def save_image(file_binary, filename= None):
     if filename is None:
@@ -48,14 +53,14 @@ async def process_image(file: bytes = File(...)):
 
         # response = format_response_detect_client_prod(classifier_probs, recognited_text, predict_img_path)
 
-        response = {}
+        response = detector.predict([img_file_path])
 
-        predict_img = Image.open(img_file_path)
+        predict_img = Image.open(response['predict_img_path'])
         bytes_image = io.BytesIO()
 
         predict_img.save(bytes_image, format='PNG')
         
-        return Response(content=bytes_image.getvalue(), headers=response, media_type="image/png")
+        return Response(content=bytes_image.getvalue(), headers={}, media_type="image/png")
 
 
 if __name__ == '__main__':
