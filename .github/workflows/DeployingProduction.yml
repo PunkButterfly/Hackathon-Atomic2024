@@ -1,0 +1,93 @@
+name: Deploying to Production
+on:
+  pull_request:
+    types: [ closed ]
+    branches:
+      - main
+env:
+  BACKEND_PREIMAGE_PATH: preimages/backend
+  DOCKER_BACKEND_PREIMAGE_NAME: servicecicd-backend-preimage-production
+  BACKEND_CONTAINER_NAME: servicecicd-backend-production
+  BACKEND_PORT: 8506
+
+  FRONTEND_PREIMAGE_PATH: preimages/frontend
+  DOCKER_FRONTEND_PREIMAGE_NAME: servicecicd-frontend-preimage-production
+  FRONTEND_CONTAINER_NAME: servicecicd-frontend-production
+  FRONTEND_PORT: 8505
+
+  DOCKERHUB_LOGIN: ${{ secrets.DOCKERHUB_LOGIN }}
+  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+jobs:
+  BuildingPreimages:
+    if: github.event.pull_request.merged == true
+    name: Build preimages
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@master
+      - name: Check backend requirements changes
+        id: changed-backend-preimage
+        uses: tj-actions/changed-files@v44
+        with:
+          files: ${{ env.BACKEND_PREIMAGE_PATH }}/requirements.txt
+      - name: Check frontend requirements changes
+        id: changed-frontend-preimage
+        uses: tj-actions/changed-files@v44
+        with:
+          files: ${{ env.FRONTEND_PREIMAGE_PATH }}/requirements.txt
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: 'x64'
+      - name: Login to dockerhub
+        if: steps.changed-backend-preimage.outputs.any_changed == 'true' || steps.changed-frontend-preimage.outputs.any_changed == 'true'
+        run: echo ${{ env.DOCKERHUB_PASSWORD }} | docker login -u ${{ env.DOCKERHUB_LOGIN }} --password-stdin
+      # Backend preimage
+      - name: BuildPush new backend preimage
+        if: steps.changed-backend-preimage.outputs.any_changed == 'true'
+        run: |
+          cd ${{ env.BACKEND_PREIMAGE_PATH }}
+          docker build -t ${{ env.DOCKERHUB_LOGIN }}/${{ env.DOCKER_BACKEND_PREIMAGE_NAME }}:latest -f Dockerfile .
+          docker push ${{ env.DOCKERHUB_LOGIN }}/${{ env.DOCKER_BACKEND_PREIMAGE_NAME }}:latest
+          cd ~
+      # Frontend preimage
+      - name: BuildPush new frontend preimage
+        if: steps.changed-frontend-preimage.outputs.any_changed == 'true'
+        run: |
+          cd ${{ env.FRONTEND_PREIMAGE_PATH }}
+          docker build -t ${{ env.DOCKERHUB_LOGIN }}/${{ env.DOCKER_FRONTEND_PREIMAGE_NAME }}:latest -f Dockerfile .
+          docker push ${{ env.DOCKERHUB_LOGIN }}/${{ env.DOCKER_FRONTEND_PREIMAGE_NAME }}:latest
+          cd ~
+  DeployingVM:
+    if: github.event.pull_request.merged == true
+    name: Deploying to VM
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: BuildingPreimages
+    steps:
+      - name: Deploying to VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.PUNKER_USERNAME }}
+          key: ${{ secrets.PUNKER_SSH_KEY_PRIVATE }}
+          passphrase: ${{ secrets.PUNKER_PASSPHRASE }}
+          command_timeout: 30m
+          script: |
+            cd ${{ github.event.repository.name }}/production
+            git pull https://${{ secrets.PUNKER_GITHUB_USERNAME }}:${{ secrets.PUNKER_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git main
+            
+            rm .env
+            echo DOCKERHUB_LOGIN=${{ env.DOCKERHUB_LOGIN }} >> .env
+            
+            echo DOCKER_BACKEND_PREIMAGE_NAME=${{ env.DOCKER_BACKEND_PREIMAGE_NAME }} >> .env
+            echo BACKEND_CONTAINER_NAME=${{ env.BACKEND_CONTAINER_NAME }} >> .env
+            echo BACKEND_PORT=${{ env.BACKEND_PORT }} >> .env
+            
+            echo DOCKER_FRONTEND_PREIMAGE_NAME=${{ env.DOCKER_FRONTEND_PREIMAGE_NAME }} >> .env
+            echo FRONTEND_CONTAINER_NAME=${{ env.FRONTEND_CONTAINER_NAME }} >> .env
+            echo FRONTEND_PORT=${{ env.FRONTEND_PORT }} >> .env
+            
+            sudo docker compose down            
+            sudo docker compose up --build -d
+            echo y | sudo docker image prune -a
