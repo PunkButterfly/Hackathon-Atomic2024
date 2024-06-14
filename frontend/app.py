@@ -15,7 +15,7 @@ st.header("")
 uploaded_file = st.file_uploader('Фото сварочного шва', accept_multiple_files=False)
 
 response = None
-
+print(f"{URL}/detect/")
 if uploaded_file:
     source_img = uploaded_file.read()
     print(f"{URL}/detect/")
