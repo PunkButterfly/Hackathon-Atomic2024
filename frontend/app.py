@@ -5,7 +5,7 @@ import streamlit as st
 
 
 URL = f"http://backend:{os.getenv('BACKEND_PORT')}"
-# URL = 'http://0.0.0.0:8228'
+# URL = 'http://158.160.17.229:8520'
 
 st.set_page_config(page_title="ATOMIC HACK 2024", layout="wide")
 
@@ -18,6 +18,7 @@ response = None
 
 if uploaded_file:
     source_img = uploaded_file.read()
+    print(f"{URL}/detect/")
     response = rq.post(f"{URL}/detect/", files={"file": source_img})
 
 if response:
