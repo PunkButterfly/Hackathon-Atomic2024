@@ -4,7 +4,6 @@ import requests as rq
 import streamlit as st
 
 
-# Внутрення сеть докер композа
 URL = f"http://backend:{os.getenv('BACKEND_PORT')}/"
 # URL = 'http://0.0.0.0:8228'
 
