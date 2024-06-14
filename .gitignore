@@ -3,3 +3,5 @@ dataset
 .DS_Store
 darknet
 splited_dataset
+.env
+tmp_files
