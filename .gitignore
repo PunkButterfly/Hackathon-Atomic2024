@@ -1,0 +1,8 @@
+dataset_description.md
+dataset
+.DS_Store
+darknet
+splited_dataset
+.env
+tmp_files
+__pycache__
