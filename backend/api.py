@@ -49,7 +49,7 @@ async def process_image(file: bytes = File(...)):
 
         response = detector.predict([img_file_path])[0]
 
-        predict_img = Image.open(response['predict_img_path'])
+        predict_img = Image.open(response[0]['predict_img_path'])
         bytes_image = io.BytesIO()
 
         predict_img.save(bytes_image, format='PNG')
