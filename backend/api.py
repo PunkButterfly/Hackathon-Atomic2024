@@ -1,7 +1,8 @@
-from models.Detector import Detector
 from datetime import datetime
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import FileResponse, Response
+from models.Detector import Detector
+from pathlib import Path
 from PIL import Image
 import aiofiles
 import io
@@ -33,11 +34,16 @@ async def save_image(file_binary, filename= None):
 
     return img_file_path, file_binary
 
-
 @app.get("/")
 def hello():
     return "Все робит"
 
+@app.get("/get-image-by-path/")
+async def get_image_by_path(img_path: str):
+    image_path = Path(img_path)
+    if not image_path.is_file():
+        return {"error": "Image not found on the server"}
+    return FileResponse(image_path)
 
 @app.post("/detect/")
 async def process_image(file: bytes = File(...)):
@@ -55,6 +61,7 @@ async def process_image(file: bytes = File(...)):
 
         names_count = response['names_count']
         formated_response = dict(list(zip(names_count.keys(), [str(i) for i in names_count.values()])))
+        formated_response['predicted_image_path'] = response['predict_img_path']
         
         return Response(content=bytes_image.getvalue(), headers=formated_response, media_type="image/png")
 
