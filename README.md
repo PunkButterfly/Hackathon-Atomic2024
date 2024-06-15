@@ -17,16 +17,16 @@ docker compose up --build -d
 ```
 ├── .github -> CI/CD пайплайны  
 ├── backend -> Директория backend микросервиса
-│  │  ├── models
-│  │  │  ├── weights -> Веса моделей
-│  │  │  ├── Detector.py -> Инференс модели детекции
-│  │  ├── api.py -> backend приложение 
-│  │  ├── Dockerfile
-│  │  ├── requirements.txt 
+│  ├── models
+│  │  ├── weights -> Веса моделей
+│  │  ├── Detector.py -> Инференс модели детекции
+│  ├── api.py -> backend приложение 
+│  ├── Dockerfile
+│  ├── requirements.txt 
 ├── frontend -> Директория frontend микросервиса
-│  │  ├── app.py -> frontend приложение
-│  │  ├── Dockerfile
-│  │  ├── requirements.txt 
+│  ├── app.py -> frontend приложение
+│  ├── Dockerfile
+│  ├── requirements.txt 
 ├── notebooks -> Ноутбуки подготовки данных и обучения моделей
 ├── .env -> Переменные окружения, необходимые для запуска проекта
 ├── .gitignore
