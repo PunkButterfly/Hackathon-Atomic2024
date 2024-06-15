@@ -3,9 +3,29 @@ import os
 import requests as rq
 import streamlit as st
 
-
+# URL = 'http://158.160.17.229:8520'
 URL = f"http://backend:{os.getenv('BACKEND_PORT')}"
 # URL = 'http://0.0.0.0:8228'
+
+TMP_DIR  = './tmp_files'
+
+def parse_detected_classes(headers):
+    curr_cls = {}
+    classes = ["adj", "int", "geo", "pro", "non"]
+    for cls in classes:
+        if cls in headers:
+            curr_cls[cls] = headers[cls]
+
+    return curr_cls
+
+def save_bin_image(image_bin):
+    if not os.path.exists(TMP_DIR):
+        os.mkdir(TMP_DIR)
+    img_path = f"{TMP_DIR}/tmp_{datetime.now()}.jpg"
+    with open (img_path, 'wb') as f:
+        f.write(image_bin)
+
+    return img_path
 
 st.set_page_config(page_title="ATOMIC HACK 2024", layout="wide")
 
@@ -23,44 +43,21 @@ if uploaded_file:
 if response:
     image_bin = response.content
     headers = response.headers
+
+    curr_image_path = save_bin_image(image_bin)
     
 
-image, proceed_img, response_body = st.columns(3, gap='small')
+image, response_body = st.columns(2, gap='small')
 
 with image:
     if uploaded_file:
-        st.image(uploaded_file, caption="Загруженный снимок")
+        st.image(curr_image_path, caption="Выделенные данные на снимке")
 
-with proceed_img:
+with response_body:
     if uploaded_file:
-        st.image(image_bin, caption="Выделенные данные на снимке")
+        result_string = "Обнаружено:\n\n"
+        curr_classes = parse_detected_classes(headers)
+        for cls, val in curr_classes.items():
+            result_string += f"* :red[{val}] дефектов типа **{cls}**\n\n"
 
-# with response_body:
-#     if uploaded_file:
-#         st.write(f"Количество обнаруженных дефектов: {228}")
-
-# curr_time = datetime.now()
-# try:
-#     if headers is not None and source_img is not None and image_bin is not None:
-#         db_request = {
-#             "ipv4": "0.0.0.0",
-#             "time": str(curr_time),
-
-#             "source_img_bindata": str(source_img),
-#             "source_img_filename": f"{curr_time}.png",
-
-#             "proceed_img_bindata": str(image_bin),
-#             "proceed_img_filename": f"proceed_{curr_time}.png",
-
-#             "recog_type": headers['type'],
-#             "confidence": headers['confidence'],
-#             "series": headers['series'],
-#             "number":  headers['number'],
-#             "page_number": headers['page_number'],
-#         }
-
-#         request_to_db = rq.post(f"http://158.160.17.229:8503/log", json=db_request)
-
-#         print(request_to_db)
-# except:
-#     print("отправка на дб не удалfсь")
+        st.markdown(result_string)
