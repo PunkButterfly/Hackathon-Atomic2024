@@ -27,7 +27,7 @@ docker compose up --build -d
 │  │  ├── app.py -> frontend приложение
 │  │  ├── Dockerfile
 │  │  ├── requirements.txt 
-├── notebooks -> Ноутбуки подготовки данных
+├── notebooks -> Ноутбуки подготовки данных и обучения моделей
 ├── .env -> Переменные окружения, необходимые для запуска проекта
 ├── .gitignore
 ├── docker-compose.yaml
