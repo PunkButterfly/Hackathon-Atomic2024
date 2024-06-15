@@ -6,3 +6,4 @@ splited_dataset
 .env
 tmp_files
 __pycache__
+*.csv
