@@ -1,4 +1,4 @@
-from models.Detecor import Detector
+from models.Detector import Detector
 from datetime import datetime
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import FileResponse, Response
