@@ -47,13 +47,7 @@ async def process_image(file: bytes = File(...)):
     
         img_file_path, binary_img_data = await save_image(file)
 
-        # classifier_probs, recognited_text, predict_img_path = pipeline.forward(img_file_path)
-
-        # pipeline = Pipeline(WEIGHTS_DIR, TMP_DIR, classifier_weights_name = 'weights_71_0.94_0.93_0.93_0.93.pt')
-
-        # response = format_response_detect_client_prod(classifier_probs, recognited_text, predict_img_path)
-
-        response = detector.predict([img_file_path])
+        response = detector.predict([img_file_path])[0]
 
         predict_img = Image.open(response['predict_img_path'])
         bytes_image = io.BytesIO()

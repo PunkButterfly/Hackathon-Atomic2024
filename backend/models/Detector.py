@@ -9,20 +9,21 @@ class Detector:
         self.tmp_path = path_to_tmp
 
     def predict(self, paths_to_images: list):
-        print("Detection...")
-        outputs = self.model(paths_to_images)
+        # print("Detection...")
+        outputs = self.model(paths_to_images, verbose=False)
 
         preds = []
 
-        for output in outputs:
+        for i, output in enumerate(outputs):
             names = [output.names[i] for i in output.boxes.cls.numpy()]
             confs = output.boxes.conf.numpy().tolist()
 
-            predict_img_path = output.save(filename=f'{self.tmp_path}tmp_{datetime.now()}.jpg')
+            predict_img_path = output.save(filename=f'{self.tmp_path}/tmp_{datetime.now()}.jpg')
 
             preds.append(
                 {
                     "predict_img_path": predict_img_path,
+                    "source_img_path": paths_to_images[i],
                     "names": names,
                     "confs": confs,
                     "coords": output.boxes.xyxy.numpy(),
