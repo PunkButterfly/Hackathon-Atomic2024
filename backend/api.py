@@ -1,4 +1,4 @@
-from models.Detecor import Detector
+from models.Detector import Detector
 from datetime import datetime
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import FileResponse, Response
@@ -15,7 +15,7 @@ WEIGHTS_DIR = f'{WORKDIR}models/weights/'
 
 app = FastAPI()
 
-detector = Detector(path_to_weights=WEIGHTS_DIR, path_to_tmp=TMP_DIR, weights_name='detector_weights_v1.pt')
+detector = Detector(path_to_weights=WEIGHTS_DIR, path_to_tmp=TMP_DIR, weights_name='detector_weights_v2.pt')
 
 async def save_image(file_binary, filename= None):
     if filename is None:
