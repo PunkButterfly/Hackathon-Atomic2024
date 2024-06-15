@@ -9,6 +9,15 @@ URL = f"http://backend:{os.getenv('BACKEND_PORT')}"
 
 TMP_DIR  = './tmp_files'
 
+MANUAL = """ \
+### Расшифровка типов дефектов
+- ```прилегающие дефекты``` - брызги, прожоги от дуги, название класса ```adj```
+- ```дефекты целостности``` - кратер, шлак, свищ, пора, прожог, включения, название класса - ```int```
+- ```дефекты геометрии```   - подрез, непровар, наплыв, чешуйчатость, западание, неравномерность, название класса - ```geo```
+- ```дефекты постобработки```     - заусенец, торец, задир, забоина, название класса - ```pro```
+- ```дефекты невыполнения```          - незаполнение раковины, несплавление, название класса - ```non```\
+"""
+
 def parse_detected_classes(headers):
     curr_cls = {}
     classes = ["adj", "int", "geo", "pro", "non"]
@@ -45,19 +54,25 @@ if response:
     headers = response.headers
 
     curr_image_path = save_bin_image(image_bin)
-    
 
 image, response_body = st.columns(2, gap='small')
 
 with image:
     if uploaded_file:
-        st.image(curr_image_path, caption="Выделенные данные на снимке")
+        st.image(curr_image_path, caption="Выделенные дефекты на снимке")
 
 with response_body:
     if uploaded_file:
-        result_string = "Обнаружено:\n\n"
+        result_string = ""
+
         curr_classes = parse_detected_classes(headers)
-        for cls, val in curr_classes.items():
-            result_string += f"* :red[{val}] дефектов типа **{cls}**\n\n"
+        if len(curr_classes.keys()) > 0:
+            result_string += "### Обнаружено:\n\n"
+            for cls, val in curr_classes.items():
+                result_string += f"* :red[{val}] дефектов типа **{cls}**\n\n"
+
+            result_string += MANUAL
+        else:
+            result_string += "Дефектов не обнаружено."
 
         st.markdown(result_string)
