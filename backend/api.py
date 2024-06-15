@@ -51,10 +51,12 @@ async def process_image(file: bytes = File(...)):
 
         predict_img = Image.open(response['predict_img_path'])
         bytes_image = io.BytesIO()
-
         predict_img.save(bytes_image, format='PNG')
+
+        names_count = response['names_count']
+        formated_response = dict(list(zip(names_count.keys(), [str(i) for i in names_count.values()])))
         
-        return Response(content=bytes_image.getvalue(), headers={}, media_type="image/png")
+        return Response(content=bytes_image.getvalue(), headers=formated_response, media_type="image/png")
 
 
 if __name__ == '__main__':
