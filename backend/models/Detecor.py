@@ -12,24 +12,22 @@ class Detector:
         print("Detection...")
         outputs = self.model(paths_to_images)
 
-        output = outputs[0] # можно так делать потому что всегоа загружаем только одно изображение
-         
-        # print(output)
+        preds = []
 
-        # print(output.boxes)
-        
-        names = [output.names[i] for i in output.boxes.cls.numpy()]
-        confs = output.boxes.conf.numpy().tolist()
+        for output in outputs:
+            names = [output.names[i] for i in output.boxes.cls.numpy()]
+            confs = output.boxes.conf.numpy().tolist()
 
-        predict_img_path = output.save(filename=f'{self.tmp_path}tmp_{datetime.now()}.jpg')
+            predict_img_path = output.save(filename=f'{self.tmp_path}tmp_{datetime.now()}.jpg')
 
-        print(predict_img_path)
-
-        preds = {
-                "predict_img_path": predict_img_path,
-                "names": names,
-                "confs": confs,
-                "coords": output.boxes.xyxy.numpy()
-            }
-
+            preds.append(
+                {
+                    "predict_img_path": predict_img_path,
+                    "names": names,
+                    "confs": confs,
+                    "coords": output.boxes.xyxy.numpy(),
+                    "xywhn": output.boxes.xywhn.numpy()
+                }
+            )
+            
         return preds
