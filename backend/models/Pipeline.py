@@ -28,12 +28,12 @@ class Pipeline:
         #     path_to_weights, classifier_weights_name
         #     )
         
-        path_to_parts_tmp = os.path.join(path_to_tmp, "tmp_classification")
+        # path_to_parts_tmp = os.path.join(path_to_tmp, "tmp_classification")
 
-        if not os.path.exists(path_to_parts_tmp):
-            os.mkdir(path_to_parts_tmp)
+        # if not os.path.exists(path_to_parts_tmp):
+        #     os.mkdir(path_to_parts_tmp)
 
-        self.path_to_parts_tmp = path_to_parts_tmp
+        # self.path_to_parts_tmp = path_to_parts_tmp
         
     def forward(self, paths_to_images):
         detector_preds = self.detector.predict(paths_to_images)[0]
