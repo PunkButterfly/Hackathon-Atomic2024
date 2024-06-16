@@ -1,7 +1,7 @@
 from datetime import datetime
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import FileResponse, Response
-from models.Detector import Detector
+from models.Pipeline import Pipeline
 from pathlib import Path
 from PIL import Image
 import aiofiles
@@ -13,10 +13,22 @@ WORKDIR = ''
 
 TMP_DIR = f'{WORKDIR}tmp_files/'
 WEIGHTS_DIR = f'{WORKDIR}models/weights/'
+CONF_LEVEL = 0.15
+IOU_THRESHOLD = 0.4
+DETECTOR_WEIGHTS_NAME = 'detector_weights_v2.pt'
+CLASSIFIER_WEIGHTS_NAME = 'classifier_weights.pt'
 
 app = FastAPI()
 
-detector = Detector(path_to_weights=WEIGHTS_DIR, path_to_tmp=TMP_DIR, weights_name='detector_weights_v2.pt', confidence_level=0.1)
+pipeline = Pipeline(
+    path_to_weights=WEIGHTS_DIR, 
+    path_to_tmp=TMP_DIR, 
+    detector_weights_name=DETECTOR_WEIGHTS_NAME, 
+    confidence_level=CONF_LEVEL, 
+    box_intersetor_flag=False,
+    iou_treshold=IOU_THRESHOLD,
+    classifier_weights_name=CLASSIFIER_WEIGHTS_NAME
+)
 
 async def save_image(file_binary, filename= None):
     if filename is None:
@@ -53,7 +65,8 @@ async def process_image(file: bytes = File(...)):
     
         img_file_path, binary_img_data = await save_image(file)
 
-        response = detector.predict([img_file_path])[0]
+        response = pipeline.forward([img_file_path])
+        
 
         predict_img = Image.open(response['predict_img_path'])
         bytes_image = io.BytesIO()
