@@ -7,3 +7,6 @@ splited_dataset
 tmp_files
 __pycache__
 *.csv
+*epoch6*
+*.jpg
+*dataset*
