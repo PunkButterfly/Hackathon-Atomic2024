@@ -85,9 +85,9 @@ def draw_bounding_boxes(src_image_path, dst_image_path, names, coords):
         draw.rectangle([x1, y1, x2, y2], outline=class_colors[name], width=16)
         
         # Добавление подписи класса рядом с bounding box
-        text_size = draw.textsize(name, font)
+        text_width, text_height = draw.textsize(name, font=font)
         # Подложка для текста для лучшего выделения подписи
-        draw.text((x1, y1 - text_size[1]), name, fill="white",font=font)
+        draw.text((x1, y1 - text_height), name, fill="white",font=font)
     
     # Отображение изображения с bounding boxes
     img.save(dst_image_path)
