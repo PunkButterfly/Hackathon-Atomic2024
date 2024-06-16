@@ -7,11 +7,17 @@
 
 Для запуска проекта необходим установленный на системе docker
 ```commandline
-docker compose up --build -d
+docker compose up --build
 ```
 
-- WEB-cервис доступен по адресу <localhost:8521>
-- Swagger API доступен по адресу <localhost:8520/docs>
+- WEB-cервис будет доступен по адресу <localhost:8521>
+- Swagger API будет доступен по адресу <localhost:8520/docs>
+
+## Запущенное нами приложение
+Docker-compose развернут на удаленной ВМ Yandex Cloud
+
+- WEB-cервис доступен по адресу <http://punkbutterfly.tech:8511>
+- Swagger API доступен по адресу <http://punkbutterfly.tech:8510/docs>
 
 ## Структура проекта
 ```
