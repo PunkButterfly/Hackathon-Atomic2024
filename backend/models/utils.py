@@ -88,7 +88,6 @@ def draw_bounding_boxes(src_image_path, dst_image_path, names, coords):
         text_size = draw.textsize(name, font)
         # Подложка для текста для лучшего выделения подписи
         draw.text((x1, y1 - text_size[1]), name, fill="white",font=font)
-        print(name)
     
     # Отображение изображения с bounding boxes
     img.save(dst_image_path)

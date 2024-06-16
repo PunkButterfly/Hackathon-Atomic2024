@@ -24,9 +24,9 @@ class Pipeline:
             iou_treshold
             )
         
-        self.classifier = Classifier(
-            path_to_weights, classifier_weights_name
-            )
+        # self.classifier = Classifier(
+        #     path_to_weights, classifier_weights_name
+        #     )
         
         path_to_parts_tmp = os.path.join(path_to_tmp, "tmp_classification")
 
@@ -38,23 +38,23 @@ class Pipeline:
     def forward(self, paths_to_images):
         detector_preds = self.detector.predict(paths_to_images)[0]
         
-        with Image.open(detector_preds['predict_img_path']) as img:
-            cropped_img_paths = []
-            for idx, coords in enumerate(detector_preds['coords']):
-                cropped_img = img.crop((coords[0], coords[1], coords[2], coords[3]))
+        # with Image.open(detector_preds['predict_img_path']) as img:
+        #     cropped_img_paths = []
+        #     for idx, coords in enumerate(detector_preds['coords']):
+        #         cropped_img = img.crop((coords[0], coords[1], coords[2], coords[3]))
 
-                cur_part_path = os.path.join(self.path_to_parts_tmp, str(idx) + ".jpg")
+        #         cur_part_path = os.path.join(self.path_to_parts_tmp, str(idx) + ".jpg")
 
-                cropped_img.save(cur_part_path)
-                cropped_img_paths.append(cur_part_path)
+        #         cropped_img.save(cur_part_path)
+        #         cropped_img_paths.append(cur_part_path)
 
-            classifier_preds = self.classifier.predict(self.path_to_parts_tmp)
+        #     classifier_preds = self.classifier.predict(self.path_to_parts_tmp)
 
-            print(classifier_preds)
+        #     print(classifier_preds)
 
-            for cropped_img_path in cropped_img_paths:
-                os.remove(cropped_img_path)
+        #     for cropped_img_path in cropped_img_paths:
+        #         os.remove(cropped_img_path)
         
-        detector_preds['class_preds'] = classifier_preds
+        # detector_preds['class_preds'] = classifier_preds
         
         return detector_preds

@@ -13,8 +13,8 @@ WORKDIR = ''
 
 TMP_DIR = f'{WORKDIR}tmp_files/'
 WEIGHTS_DIR = f'{WORKDIR}models/weights/'
-CONF_LEVEL = 0.05
-IOU_THRESHOLD = 0.2
+CONF_LEVEL = 0.15
+IOU_THRESHOLD = 0.4
 DETECTOR_WEIGHTS_NAME = 'detector_weights_v2.pt'
 CLASSIFIER_WEIGHTS_NAME = 'classifier_weights.pt'
 
