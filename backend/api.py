@@ -16,7 +16,7 @@ WEIGHTS_DIR = f'{WORKDIR}models/weights/'
 
 app = FastAPI()
 
-detector = Detector(path_to_weights=WEIGHTS_DIR, path_to_tmp=TMP_DIR, weights_name='detector_weights_v2.pt')
+detector = Detector(path_to_weights=WEIGHTS_DIR, path_to_tmp=TMP_DIR, weights_name='detector_weights_v2.pt', confidence_level=0.1)
 
 async def save_image(file_binary, filename= None):
     if filename is None:
